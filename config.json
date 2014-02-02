@@ -1,6 +1,10 @@
 {
   "database": {
     "url": "mongodb://localhost/social"
+  },
+  "security": {
+    "salt": "x92hAbc",
+    "cookie_secret": "X6L25H"
   }
 }
 

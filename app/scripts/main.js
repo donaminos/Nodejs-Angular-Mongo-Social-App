@@ -5,6 +5,7 @@ require.config({
     angular: '../bower_components/angular/angular.min',
     angularResource: '../bower_components/angular-resource/angular-resource.min',
     angularRoute: '../bower_components/angular-route/angular-route.min',
+    angularCookie: '../bower_components/angular-cookies/angular-cookies.min',
     domReady: '../bower_components/requirejs-domready/domReady'
   },
 
@@ -20,10 +21,14 @@ require.config({
 
     angularRoute: {
       deps: ['angular']
+    },
+
+    angularCookie: {
+      deps: ['angular']
     }
   }
 });
 
-require(['app', 'route', 'bootstrap'], function(app) {
+require(['app', 'route', 'bootstrap'], function(app, route) {
 });
 

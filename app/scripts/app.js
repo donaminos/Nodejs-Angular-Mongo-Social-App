@@ -2,11 +2,22 @@ define([
     'angular', 
     'angularResource',
     'angularRoute',
+    'angularCookie',
     'controllers/controllers',
     'directives/directives',
     'filters/filters',
     'services/services'
   ],
   function(angular) {
-    return angular.module('socialApp', ['ngResource', 'ngRoute', 'controllers', 'services', 'directives', 'filters']);
+    var deps = [
+      'ngResource',
+      'ngRoute',
+      'ngCookies',
+      'controllers',
+      'services',
+      'directives',
+      'filters'
+    ];
+
+    return angular.module('socialApp', deps);
 });

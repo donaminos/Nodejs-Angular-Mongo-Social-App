@@ -8,10 +8,10 @@ var http = require('http');
 var path = require('path');
 
 var mongoose = require('mongoose');
-var nconf = require('nconf');
-nconf.file(path.join(__dirname, 'config.json'));
+var config = require('nconf');
+config.file(path.join(__dirname, 'config.json'));
 
-mongoose.connect(nconf.get('database').url);
+mongoose.connect(config.get('database').url);
 
 var db = mongoose.connection;
 db.on('error', function() {
@@ -22,8 +22,8 @@ db.on('open', function() {
   console.log('Db open');
 });
 
-var models = require(path.join(__dirname, 'models/model'))(mongoose);
-var test_user = new models.User({
+var UserModel = require(path.join(__dirname, 'models/user'))(config, mongoose);
+var test_user = new UserModel.User({
   name: {
     first_name: 'Phi',
     last_name: 'Van Ngoc'
@@ -32,7 +32,7 @@ var test_user = new models.User({
   password: 'dfdfdfdfd'
 });
 
-models.User.find({}, function(error, data) {
+UserModel.User.find({}, function(error, data) {
   console.log(data);
 });
 
@@ -43,6 +43,9 @@ app.configure(function() {
   app.set('port', process.env.PORT || 3000);
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'jade');
+
+  app.use(express.cookieParser(config.get('security').cookie_secret));
+  app.use(express.session());
 
   app.use(express.favicon());
   app.use(express.logger('dev'));
@@ -62,7 +65,7 @@ app.configure(function() {
   }
 });
 
-var route = require('./routes')(app, models);
+require('./routes/user')(app, UserModel);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

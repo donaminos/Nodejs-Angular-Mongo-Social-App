@@ -2,8 +2,7 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(type='text/javascript', data-main='scripts/main.js', src='bower_components/requirejs/require.js')
+    link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.min.css')
   body
     block content
-
-    block script
