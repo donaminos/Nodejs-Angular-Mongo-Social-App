@@ -28,7 +28,7 @@ module.exports = function(app, model) {
     var criteria = {};
 
     if (req.params.userId) {
-      criteria.id = req.params.userId;
+      criteria._id = req.params.userId;
     }
 
     // Exclude password from the fields list

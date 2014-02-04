@@ -16,7 +16,7 @@ define(['app'], function(app) {
     '/users/account': {
       controller: 'MyAccountController',
       templateUrl: 'views/profile.html',
-      loginRequired: true
+      loginRequired: true,
     }
   };
 
@@ -35,6 +35,7 @@ define(['app'], function(app) {
       if (next.loginRequired && !AuthService.isLoggedIn()) {
         $location.path('/users/login');
         event.preventDefault();
+        return;
       }
     });
 

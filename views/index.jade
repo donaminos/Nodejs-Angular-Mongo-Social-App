@@ -10,14 +10,17 @@ block content
         div#main-navbar.collapse.navbar-collapse
           ul.nav.navbar-nav
             li
-              a(href="#/users/login", ng-hide="user") Login
+              a(href="#/") Home
             li
-              a(href="#/users/register", ng-hide="user") Sign up
+              a(href="#/users/login", class="ng-cloak" ng-show="!user") Login
+            li
+              a(href="#/users/register", class="ng-cloak" ng-show="!user") Sign up
           ul.nav.navbar-nav.navbar-right
             li
-              a(href="#/users/account", ng-show="user") <strong>{{user | fullName}}</strong>
+              a(href="#/users/account", ng-show="user") <strong><span ng-bind="user | fullName"/></strong>
             li 
               a(href="#", ng-controller="LogoutController" ng-show="user", ng-click="logout()") Logout
 
     h1(style="visibility: hidden")= title
+    <h2 loading>Loading, please wait...</h2>
     <div ng-view></div>

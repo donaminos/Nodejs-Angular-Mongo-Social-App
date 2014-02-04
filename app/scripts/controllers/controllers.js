@@ -24,18 +24,21 @@ define(['angular'], function(angular) {
     // If user is already authenticated, redirect to frontpage
     if (AuthService.isLoggedIn()) {
       $location.path('/');
+      return;
     }
+
+    AuthService.setUserData(null);
 
     $scope.login = function() {
       $http.post('/users/login', {
         email: $scope.email,
         password: $scope.password
-      }).
-      success(function(data) {
+
+      }).success(function(data) {
         AuthService.setUserData(data);
         $location.path('/');
-      }).
-      error(function(data) {
+
+      }).error(function(data) {
         $scope.login_message = 'Login failed';
       });
 
@@ -46,26 +49,25 @@ define(['angular'], function(angular) {
   /**
    * User sign-up controller
    */
-  controllers.controller('SignupController', ['$scope', '$http', '$rootScope', '$location', function($scope, $http, $rootScope, $location) {
+  controllers.controller('SignupController', ['$scope', '$http', '$rootScope', 'AuthService', '$location', function($scope, $http, $rootScope, AuthService, $location) {
     // If user is already authenticated, redirect to frontpage
-    if ($rootScope.me) {
+    if (AuthService.isLoggedIn()) {
       $location.path('/');
+      return;
     }
 
     $scope.signup = function() {
       var user = $scope.user;
       $rootScope.signup_success = false;
 
-      $http.post('/users/register', user).
-      success(function(data, status) {
+      $http.post('/users/register', user).success(function(data, status) {
         if (data.status == 'ok') {
           $rootScope.signup_success = true;
           $location.path('/users/login');
         } else {
           $scope.signup_message = data.message;
         }
-      }).
-      error(function(data, status) {
+      }).error(function(data, status) {
           $scope.signup_message = 'Failed to register new account';
       });
     };
@@ -74,17 +76,10 @@ define(['angular'], function(angular) {
   /**
    * User log-out
    */
-  controllers.controller('LogoutController', ['$scope', '$http', '$rootScope', '$location', function($scope, $http, $rootScope, $location) {
+  controllers.controller('LogoutController', ['$scope', '$rootScope', '$http', 'AuthService', '$location', function($scope, $rootScope, $http, AuthService, $location) {
     $scope.logout = function() {
-      // Do nothing if user is not logged in
-      if ($rootScope.me == undefined) {
-        console.log('not logged in');
-        return;
-      }
-
-      $http.get('/users/logout')
-      .success(function() {
-        $rootScope.me = null;
+      $http.get('/users/logout').success(function() {
+        AuthService.setUserData(null);
         $location.path('/');
       });
     };
@@ -96,15 +91,30 @@ define(['angular'], function(angular) {
    */
   controllers.controller('NavigationController', ['$scope', 'AuthService', function($scope, AuthService) {
     $scope.user = AuthService.userData();
+
+    $scope.$on('logout', function() {
+      $scope.user = null;
+    });
+
+    $scope.$on('login', function() {
+      $scope.user = AuthService.userData();
+    });
   }]);
 
   /**
    * My account controller
    */
-  controllers.controller('MyAccountController', ['$scope', '$http', '$rootScope', '$location', function($scope, $http, $rootScope, $location) {
-    $scope.user = $rootScope.me;
+  controllers.controller('MyAccountController', ['$scope', '$http', 'AuthService', '$location', function($scope, $http, AuthService, $location) {
+    var user = AuthService.userData();
 
-    $scope.save = function() {
-    };
+    if (!user) {
+      return $location.path('/users/login');
+    }
+
+    $http.get('/users/' + user._id).success(function(data) {
+      $scope.user = data[0];
+    }).error(function() {
+      $location.path('/users/login');
+    });
   }]);
 });

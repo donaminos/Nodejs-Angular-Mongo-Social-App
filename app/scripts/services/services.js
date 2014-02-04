@@ -9,25 +9,29 @@ define(['angular'], function(angular) {
   /**
    * User authentication service
    */
-  services.factory('AuthService', ['$http', '$cookieStore', function($http, $cookieStore) {
-    var user = $cookieStore.get('user') || null;
-
+  services.factory('AuthService', ['$http', '$rootScope', '$cookieStore', function($http, $rootScope, $cookieStore) {
     return {
       isLoggedIn: function() {
-        return user;
+        return ($cookieStore.get('user') != undefined);
       },
 
       userData: function() {
-        return user;
+        return $cookieStore.get('user');
       },
 
       setUserData: function(data) {
-        user = data;
+        $cookieStore.put('user', data);
+
+        if (!data) {
+          $cookieStore.remove('user');
+          $rootScope.$broadcast('logout');
+        } else {
+          $rootScope.$broadcast('login');
+        }
       },
 
       checkLoginStatus: function(success, error) {
         $http.get('/users/authenticated').success(function(data) {
-          user = data;
           $cookieStore.put('user', data);
           success();
         }).error(error);
