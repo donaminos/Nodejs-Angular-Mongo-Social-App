@@ -12,7 +12,8 @@ require.config({
   shim: {
     // Angular doesn't support requirejs so need to export angular object explicitly
     angular: {
-      exports: 'angular'
+      exports: 'angular',
+      deps: ['jquery']
     },
 
     angularResource: {

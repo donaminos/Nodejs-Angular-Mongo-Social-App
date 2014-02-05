@@ -99,6 +99,17 @@ define(['angular'], function(angular) {
     $scope.$on('login', function() {
       $scope.user = AuthService.userData();
     });
+
+    // Mark the active menu item when path is changing
+    $scope.$on('$routeChangeSuccess', function(event, current, prev) {
+      $('#main-navbar')
+      .find('li')
+      .removeClass('active')
+      .end()
+      .find('a[href="#' + current.originalPath + '"]')
+      .parent()
+      .addClass('active');
+    });
   }]);
 
   /**
