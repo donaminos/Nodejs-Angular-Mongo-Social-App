@@ -37,4 +37,35 @@ define(['angular'], function(angular) {
       }
     };
   }]);
+
+
+  /**
+   * Message service
+   */
+  services.factory('StatusMessage', ['$rootScope', function($rootScope) {
+    return {
+      setMessage: function(type, message) {
+        if (!message) {
+          clearMessage(type);
+        } else {
+          if ($rootScope.messages[type] == undefined) {
+            $rootScope.messages[type] = [];
+          }
+          $rootScope.messages[type].push(message);
+        }
+      },
+
+      clearMessage: function(type) {
+        if (type == undefined) {
+          $rootScope.messages = {};
+        } else {
+          $rootScope.messages[type] = [];
+        }
+      },
+
+      getMessage: function() {
+        return $rootScope.messages;
+      }
+    };
+  }]);
 });

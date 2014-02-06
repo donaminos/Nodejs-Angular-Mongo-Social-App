@@ -22,6 +22,27 @@ define(['angular'], function(angular) {
     };
   }]);
 
+
+  /**
+   * Directive for displaying status messages
+   */
+  directives.directive('statusMessage',['StatusMessage', function(StatusMessage) {
+    return {
+      restrict: 'E',
+      replace: true,
+      link: function(scope, elem, attrs) {
+        var messages = $rootScope.messages;
+
+        if (!messages || messages.length <= 0) {
+          return;
+        }
+
+        for (var type in messages) {
+        }
+      }
+    };
+  });
+
   directives.directive('hello', function() {
     return {
       restrict: 'EA',
