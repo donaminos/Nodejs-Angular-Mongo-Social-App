@@ -15,19 +15,18 @@ define(['angular'], function(angular) {
         return ($cookieStore.get('user') != undefined);
       },
 
-      userData: function() {
-        return $cookieStore.get('user');
+      login: function(user) {
+        $cookieStore.put('user', user);
+        $rootScope.$broadcast('login');
       },
 
-      setUserData: function(data) {
-        $cookieStore.put('user', data);
+      logout: function() {
+        $cookieStore.remove('user');
+        $rootScope.$broadcast('logout');
+      },
 
-        if (!data) {
-          $cookieStore.remove('user');
-          $rootScope.$broadcast('logout');
-        } else {
-          $rootScope.$broadcast('login');
-        }
+      userData: function() {
+        return $cookieStore.get('user');
       },
 
       checkLoginStatus: function(success, error) {

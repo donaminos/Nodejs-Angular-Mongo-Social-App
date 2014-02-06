@@ -27,7 +27,7 @@ define(['angular'], function(angular) {
       return;
     }
 
-    AuthService.setUserData(null);
+    AuthService.logout();
 
     $scope.login = function() {
       $http.post('/users/login', {
@@ -35,7 +35,7 @@ define(['angular'], function(angular) {
         password: $scope.password
 
       }).success(function(data) {
-        AuthService.setUserData(data);
+        AuthService.login(data);
         $location.path('/');
 
       }).error(function(data) {
@@ -79,7 +79,7 @@ define(['angular'], function(angular) {
   controllers.controller('LogoutController', ['$scope', '$rootScope', '$http', 'AuthService', '$location', function($scope, $rootScope, $http, AuthService, $location) {
     $scope.logout = function() {
       $http.get('/users/logout').success(function() {
-        AuthService.setUserData(null);
+        AuthService.logout();
         $location.path('/');
       });
     };
